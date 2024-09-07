@@ -1,12 +1,19 @@
 ﻿using System.Text;
 
-internal class Program
+namespace l1
 {
-	static void Main(string[] args)
+	internal class Program
 	{
-		Console.InputEncoding = Encoding.Unicode;
-		Console.OutputEncoding = Encoding.Unicode;
+		static void Main(string[] args)
+		{
+			Console.InputEncoding = Encoding.Unicode;
+			Console.OutputEncoding = Encoding.Unicode;
 
-		Console.WriteLine("str: " + Console.ReadLine());
+			Item item = new Item("1", "2", 3, 4, 5, "6", "7");
+
+
+			Console.WriteLine(item.ToConsolePrint());
+		}
 	}
 }
+
