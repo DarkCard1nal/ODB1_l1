@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Diagnostics;
+using System.Text;
 
 namespace l1
 {
@@ -116,6 +117,8 @@ namespace l1
 
 			List<Item> resultItems = items.GetListStudent(lastName);
 			string result = "";
+			Stopwatch stopwatch = new();
+			stopwatch.Start();
 
 			if (resultItems.Count == 0)
 			{
@@ -139,6 +142,12 @@ namespace l1
 					result += $"{item.StLastName} {item.StFirstName} | {item.Grade} | {item.Classroom} | {item.TLastName} {item.TFirstName}\n";
 				}
 			}
+
+			stopwatch.Stop();
+
+			items.Clear();
+
+			result += $"Operation complete. Time spent {stopwatch.ElapsedMilliseconds} ms.\n";
 
 			return result;
 		}
