@@ -33,5 +33,20 @@
 		{
 			return _items.Where(item => item.StLastName.Equals(stLastName, StringComparison.CurrentCultureIgnoreCase)).Select(item => item).ToList();
 		}
+
+		public List<Item> GetListTeacher(string tLastName)
+		{
+			return _items.Where(item => item.TLastName.Equals(tLastName, StringComparison.CurrentCultureIgnoreCase)).Select(item => item).ToList();
+		}
+
+		public List<Item> GetListClassroom(int classroom)
+		{
+			return _items.Where(item => item.Classroom == classroom).Select(item => item).ToList();
+		}
+
+		public List<Item> GetListBus(int bus)
+		{
+			return _items.Where(item => item.Bus == bus).Select(item => item).ToList();
+		}
 	}
 }
