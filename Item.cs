@@ -2,6 +2,7 @@
 {
 	internal class Item
 	{
+		public const int Count = 7;
 		public string StLastName { get; private set; }
 		public string StFirstName { get; private set; }
 		public int Grade { get; private set; }
