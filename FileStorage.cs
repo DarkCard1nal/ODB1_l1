@@ -2,8 +2,15 @@
 {
 	internal abstract class FileStorage
 	{
-		public static ItemsList DownloadDataTXT(string filePath)
+		public static ItemsList? DownloadDataTXT(string filePath)
 		{
+			string? fleExistsWrite = FileExistsWrite(filePath);
+			if (fleExistsWrite != null)
+			{
+				PrintMessageColor(fleExistsWrite, ConsoleColor.Red);
+				return null;
+			}
+			
 			ItemsList items = new ItemsList();
 
 			using (var reader = new StreamReader(filePath))
@@ -35,7 +42,7 @@
 					}
 					catch (FormatException ex)
 					{
-						PrintMessageColor($"Error during string line processing: {line}. Error: {ex.Message}", ConsoleColor.Red);
+						PrintMessageColor($"Error during string line processing: {line}. Error: {ex.Message}.", ConsoleColor.Red);
 
 					}
 				}
@@ -50,6 +57,33 @@
 			Console.ForegroundColor = color;
 			Console.WriteLine(message);
 			Console.ForegroundColor = oldColor;
+		}
+
+		public static string? FileExistsWrite(string filePath)
+		{
+			if (File.Exists(filePath))
+			{
+				try
+				{
+					using (FileStream fs = File.OpenRead(filePath))
+					{
+						// The file exists and is open for reading
+						return null;
+					}
+				}
+				catch (UnauthorizedAccessException ex)
+				{
+					return $"Error The file {filePath} exists, but you do not have permissions to read it. Error: {ex.Message}.";
+				}
+				catch (IOException ex)
+				{
+					return $"Error The file {filePath} exists, but there was an error trying to open it. Error: {ex.Message}.";
+				}
+			}
+			else
+			{
+				return $"The file {filePath} doesn't exist. Use -F[ile] to select an existing file.";
+			}
 		}
 	}
 }

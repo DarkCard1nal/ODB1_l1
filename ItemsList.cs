@@ -28,5 +28,10 @@
 		{
 			return _items[index];
 		}
+
+		public List<Item> GetListStudent(string stLastName)
+		{
+			return _items.Where(item => item.StLastName.ToUpper() == stLastName.ToUpper()).Select(item => item).ToList();
+		}
 	}
 }
