@@ -35,7 +35,7 @@
 
 		public string ToConsolePrint()
 		{
-			return StLastName + " " + StFirstName + " | " + Grade + " | " + Classroom + " | " + Bus + " | " + TLastName + " " + TFirstName;
+			return $"{StLastName} {StFirstName} | {Grade} | {Classroom} | {Bus} | {TLastName} {TFirstName}";
 		}
 	}
 }
