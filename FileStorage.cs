@@ -35,12 +35,21 @@
 					}
 					catch (FormatException ex)
 					{
-						Console.WriteLine($"Error during string line processing: {line}. Error: {ex.Message}");
+						PrintMessageColor($"Error during string line processing: {line}. Error: {ex.Message}", ConsoleColor.Red);
+
 					}
 				}
 			}
 
 			return items;
+		}
+
+		public static void PrintMessageColor(string message, ConsoleColor color)
+		{
+			ConsoleColor oldColor = Console.ForegroundColor;
+			Console.ForegroundColor = color;
+			Console.WriteLine(message);
+			Console.ForegroundColor = oldColor;
 		}
 	}
 }
