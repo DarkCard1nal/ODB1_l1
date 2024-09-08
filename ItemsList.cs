@@ -6,7 +6,7 @@
 
 		public ItemsList()
 		{
-			_items = new List<Item>();
+			_items = [];
 		}
 
 		public ItemsList(List<Item> items)
@@ -31,7 +31,7 @@
 
 		public List<Item> GetListStudent(string stLastName)
 		{
-			return _items.Where(item => item.StLastName.ToUpper() == stLastName.ToUpper()).Select(item => item).ToList();
+			return _items.Where(item => item.StLastName.Equals(stLastName, StringComparison.CurrentCultureIgnoreCase)).Select(item => item).ToList();
 		}
 	}
 }

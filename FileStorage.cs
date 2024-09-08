@@ -11,7 +11,7 @@
 				return null;
 			}
 			
-			ItemsList items = new ItemsList();
+			ItemsList items = new();
 
 			using (var reader = new StreamReader(filePath))
 			{
