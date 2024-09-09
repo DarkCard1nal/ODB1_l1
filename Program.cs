@@ -6,6 +6,7 @@ namespace l1
 	public class Program
 	{
 		private static string _filePath = "students.txt";
+		private static bool _autoclosing = true;
 
 		public static void Main(string[] args)
 		{
@@ -41,6 +42,12 @@ namespace l1
 					}
 				}
 			}
+
+			if (!_autoclosing)
+			{
+				Console.WriteLine("Press the button to exit:");
+				Console.ReadKey();
+			}
 		}
 
 		private static bool ComandSwitch(string? input)
@@ -49,6 +56,7 @@ namespace l1
 
 			const string wrongCommand = "Error wrong command. Use -H[elp].";
 			int i, number;
+			bool b = true;
 			string[] values = input.Split([':'], 2);
 			for (i = 0; i < values.Length; i++)
 			{
@@ -65,6 +73,18 @@ namespace l1
 				case "-H":
 				case "-Help":
 					Console.WriteLine(ComandHelp());
+					break;
+				case "-Autoclosing":
+					if (values.Length < 2 || !bool.TryParse(values[1], out b))
+					{
+						FileStorage.PrintMessageColor(wrongCommand, ConsoleColor.Red);
+						break;
+					}
+					else
+					{
+						_autoclosing = b;
+						Console.WriteLine("Сommand is complete.");
+					}
 					break;
 				case "-A":
 				case "-Author":
@@ -168,6 +188,7 @@ namespace l1
 			return "Comand list:\n" +
 					"-H[elp]\n" +
 					"-A[uthor]\n" +
+					"-Autoclosing: <true/false>\n" +
 					"-B[us]: <Number>\n" +
 					"-C[lassroom]: <Number>\n" +
 					"-F[ile]: <filePath>\n" +
