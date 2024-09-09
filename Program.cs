@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics;
 using System.Text;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace l1
 {
@@ -10,136 +9,153 @@ namespace l1
 
 		public static void Main(string[] args)
 		{
-			const string wrongCommand = "Error wrong command. Use -H[elp].";
 			string? input;
-			string[] values;
-			int i, number;
+			int i;
 
 			Console.InputEncoding = Encoding.Unicode;
 			Console.OutputEncoding = Encoding.Unicode;
-			
+
 			if (args.Length == 0)
 			{
 				FileStorage.PrintMessageColor(ComandAuthor(), ConsoleColor.Green);
 				Console.WriteLine(ComandHelp());
+
+				do
+				{
+					input = Console.ReadLine();
+				} while (ComandSwitch(input));
 			}
 			else
 			{
+				for (i = 0; i < args.Length; i++)
+				{
+					input = args[i];
+					if (i + 1 < args.Length && !args[i + 1].Trim().StartsWith('-'))
+					{
+						input += " " + args[++i];
+					}
 
+					if (!ComandSwitch(input))
+					{
+						break;
+					}
+				}
+			}
+		}
+
+		private static bool ComandSwitch(string? input)
+		{
+			if (input == null) return true;
+
+			const string wrongCommand = "Error wrong command. Use -H[elp].";
+			int i, number;
+			string[] values = input.Split([':'], 2);
+			for (i = 0; i < values.Length; i++)
+			{
+				values[i] = values[i].Trim();
 			}
 
-			while (true)
+			switch (values[0])
 			{
-				input = Console.ReadLine();
-				if (input == null) continue;
-
-				values = input.Split([':'], 2);
-				for (i = 0; i < values.Length; i++)
-				{
-					values[i] = values[i].Trim();
-				}
-
-				switch (values[0])
-				{
-					case null:
-						continue;
-					case "-Q":
-					case "-Quit":
-						return;
-					case "-H":
-					case "-Help":
-						Console.WriteLine(ComandHelp());
-						break;
-					case "-A":
-					case "-Author":
-						FileStorage.PrintMessageColor(ComandAuthor(), ConsoleColor.Green);
-						break;
-					case "-S":
-					case "-Student":
-						if (values.Length < 1)
-						{
-							FileStorage.PrintMessageColor(wrongCommand, ConsoleColor.Red);
-							break;
-						}
-
-						Console.WriteLine("StLastName StFirstName | Grade | Classroom | TLastName TFirstName");
-
-						Console.WriteLine(ComandFindStudent(values[1]));
-						break;
-					case "-S B":
-					case "-S Bus":
-					case "-Student B":
-					case "-Student Bus":
-						if (values.Length < 1)
-						{
-							FileStorage.PrintMessageColor(wrongCommand, ConsoleColor.Red);
-							break;
-						}
-
-						Console.WriteLine("StLastName StFirstName | Bus");
-
-						Console.WriteLine(ComandFindStudent(values[1], true));
-						break;
-					case "-F":
-					case "-File":
-						if (values.Length < 1)
-						{
-							FileStorage.PrintMessageColor(wrongCommand, ConsoleColor.Red);
-							break;
-						}
-						input = FileStorage.FileExistsWrite(values[1]);
-
-						if (input != null)
-						{
-							FileStorage.PrintMessageColor("The new file was not accepted.\n" + input, ConsoleColor.Red);
-						}
-						else
-						{
-							_filePath = values[1];
-							Console.WriteLine("New file accepted.");
-						}
-						break;
-					case "-T":
-					case "-Teacher":
-						if (values.Length < 1)
-						{
-							FileStorage.PrintMessageColor(wrongCommand, ConsoleColor.Red);
-							break;
-						}
-
-						Console.WriteLine("StLastName StFirstName | TLastName TFirstName");
-
-						Console.WriteLine(ComandFindTeacher(values[1]));
-						break;
-					case "-C":
-					case "-Classroom":
-						if (values.Length < 1 || !int.TryParse(values[1], out number))
-						{
-							FileStorage.PrintMessageColor(wrongCommand, ConsoleColor.Red);
-							break;
-						}
-
-						Console.WriteLine("StLastName StFirstName");
-
-						Console.WriteLine(ComandFindClassroom(number));
-						break;
-					case "-B":
-					case "-Bus":
-						if (values.Length < 1 || !int.TryParse(values[1], out number))
-						{
-							FileStorage.PrintMessageColor(wrongCommand, ConsoleColor.Red);
-							break;
-						}
-
-						Console.WriteLine("StLastName StFirstName | Grade | Classroom");
-
-						Console.WriteLine(ComandFindBus(number));
-						break;
-					default:
+				case null:
+					break;
+				case "-Q":
+				case "-Quit":
+					return false;
+				case "-H":
+				case "-Help":
+					Console.WriteLine(ComandHelp());
+					break;
+				case "-A":
+				case "-Author":
+					FileStorage.PrintMessageColor(ComandAuthor(), ConsoleColor.Green);
+					break;
+				case "-S":
+				case "-Student":
+					if (values.Length < 2)
+					{
 						FileStorage.PrintMessageColor(wrongCommand, ConsoleColor.Red);
 						break;
-				}
+					}
+
+					Console.WriteLine("StLastName StFirstName | Grade | Classroom | TLastName TFirstName");
+
+					Console.WriteLine(ComandFindStudent(values[1]));
+					break;
+				case "-SB":
+				case "-SBus":
+				case "-StudentB":
+				case "-StudentBus":
+					if (values.Length < 2)
+					{
+						FileStorage.PrintMessageColor(wrongCommand, ConsoleColor.Red);
+						break;
+					}
+
+					Console.WriteLine("StLastName StFirstName | Bus");
+
+					Console.WriteLine(ComandFindStudent(values[1], true));
+					break;
+				case "-F":
+				case "-File":
+					if (values.Length < 2)
+					{
+						FileStorage.PrintMessageColor(wrongCommand, ConsoleColor.Red);
+						break;
+					}
+					input = FileStorage.FileExistsWrite(values[1]);
+
+					if (input != null)
+					{
+						FileStorage.PrintMessageColor("The new file was not accepted.\n" + input, ConsoleColor.Red);
+					}
+					else
+					{
+						_filePath = values[1];
+						Console.WriteLine("New file accepted.");
+					}
+					break;
+				case "-T":
+				case "-Teacher":
+					if (values.Length < 2)
+					{
+						FileStorage.PrintMessageColor(wrongCommand, ConsoleColor.Red);
+						break;
+					}
+
+					Console.WriteLine("StLastName StFirstName | TLastName TFirstName");
+
+					Console.WriteLine(ComandFindTeacher(values[1]));
+					break;
+				case "-C":
+				case "-Classroom":
+					if (values.Length < 1 || !int.TryParse(values[1], out number))
+					{
+						FileStorage.PrintMessageColor(wrongCommand, ConsoleColor.Red);
+						break;
+					}
+
+					Console.WriteLine("StLastName StFirstName");
+
+					Console.WriteLine(ComandFindClassroom(number));
+					break;
+				case "-B":
+				case "-Bus":
+					if (values.Length < 1 || !int.TryParse(values[1], out number))
+					{
+						FileStorage.PrintMessageColor(wrongCommand, ConsoleColor.Red);
+						break;
+					}
+
+					Console.WriteLine("StLastName StFirstName | Grade | Classroom");
+
+					Console.WriteLine(ComandFindBus(number));
+					break;
+				default:
+					FileStorage.PrintMessageColor(wrongCommand, ConsoleColor.Red);
+					break;
 			}
+			return true;
 		}
 
 		private static string ComandAuthor()
@@ -156,7 +172,7 @@ namespace l1
 					"-C[lassroom]: <Number>\n" +
 					"-F[ile]: <filePath>\n" +
 					"-S[tudent]: <lastName>\n" +
-					"-S[tudent] B[us]: <lastName>\n" +
+					"-S[tudent]B[us]: <lastName>\n" +
 					"-T[eacher]: <lastname>\n" +
 					"-Q[uit]\n" +
 					"Enter comand:\n";
@@ -175,7 +191,7 @@ namespace l1
 			int count = 0;
 			string result = "";
 			Stopwatch stopwatch = new();
-			
+
 			stopwatch.Start();
 
 			if (resultItems.Count == 0)
@@ -227,7 +243,7 @@ namespace l1
 			string result = "";
 			int count = 0;
 			Stopwatch stopwatch = new();
-			
+
 			stopwatch.Start();
 
 			if (resultItems.Count == 0)
@@ -277,7 +293,7 @@ namespace l1
 			}
 			else
 			{
-				var res = resultItems.Select(item => new { item.StLastName, item.StFirstName});
+				var res = resultItems.Select(item => new { item.StLastName, item.StFirstName });
 
 				foreach (var item in res)
 				{
