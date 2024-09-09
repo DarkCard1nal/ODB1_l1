@@ -17,10 +17,16 @@ namespace l1
 
 			Console.InputEncoding = Encoding.Unicode;
 			Console.OutputEncoding = Encoding.Unicode;
+			
+			if (args.Length == 0)
+			{
+				FileStorage.PrintMessageColor(ComandAuthor(), ConsoleColor.Green);
+				Console.WriteLine(ComandHelp());
+			}
+			else
+			{
 
-			FileStorage.PrintMessageColor("Schoolsearch l1 by Shkilnyi V. CS31", ConsoleColor.Green);
-
-			Console.WriteLine(ComandHelp());
+			}
 
 			while (true)
 			{
@@ -43,6 +49,10 @@ namespace l1
 					case "-H":
 					case "-Help":
 						Console.WriteLine(ComandHelp());
+						break;
+					case "-A":
+					case "-Author":
+						FileStorage.PrintMessageColor(ComandAuthor(), ConsoleColor.Green);
 						break;
 					case "-S":
 					case "-Student":
@@ -132,10 +142,16 @@ namespace l1
 			}
 		}
 
+		private static string ComandAuthor()
+		{
+			return "Schoolsearch l1 by Shkilnyi V. CS31";
+		}
+
 		private static string ComandHelp()
 		{
 			return "Comand list:\n" +
 					"-H[elp]\n" +
+					"-A[uthor]\n" +
 					"-B[us]: <Number>\n" +
 					"-C[lassroom]: <Number>\n" +
 					"-F[ile]: <filePath>\n" +
