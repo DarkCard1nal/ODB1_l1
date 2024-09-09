@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Text;
+using System.Windows.Input;
 
 namespace l1
 {
@@ -22,7 +23,7 @@ namespace l1
 			if (args.Length == 0)
 			{
 				PrintMessageColor(ComandAuthor(), ConsoleColor.Green);
-				Console.WriteLine(ComandHelp());
+				ComandHelp();
 
 				do
 				{
@@ -77,7 +78,7 @@ namespace l1
 					return false;
 				case "-H":
 				case "-Help":
-					Console.WriteLine(ComandHelp());
+					ComandHelp();
 					break;
 				case "-A":
 				case "-Author":
@@ -267,22 +268,35 @@ namespace l1
 			return "Schoolsearch l1 by Shkilnyi V. CS31";
 		}
 
-		private static string ComandHelp()
+		private static void ComandHelp()
 		{
-			return "Comand list:\n" +
-					"-H[elp]\n" +
-					"-A[uthor]\n" +
-					"-Autoclosing: <true/false>\n" +
-					"-B[us]: <number>\n" +
-					"-C[lassroom]: <number>\n" +
-					"-F[ile]: <filePath>\n" +
-					"-Saveresult: <true/false>\n" +
-					"-Skipline: <number>\n" +
-					"-S[tudent]: <lastName>\n" +
-					"-S[tudent]B[us]: <lastName>\n" +
-					"-T[eacher]: <lastname>\n" +
-					"-Q[uit]\n" +
-					"Enter comand:\n";
+			ConsoleColor color = ConsoleColor.DarkYellow;
+			Console.WriteLine("Comand list:");
+			Console.WriteLine("-H[elp]");
+			PrintMessageColor("// command list.", color);
+			Console.WriteLine("-A[uthor]");
+			PrintMessageColor("// program author.", color);
+			Console.WriteLine("-Autoclosing: <true/false>");
+			PrintMessageColor("// if “false” then the program will wait for any key to be pressed after exiting, by default “true”.", color);
+			Console.WriteLine("-B[us]: <number>");
+			PrintMessageColor("// shows a list of objects in which the Bus field matches the data in the format “StLastName StFirstName | Grade | Classroom”.", color);
+			Console.WriteLine("-C[lassroom]: <number>");
+			PrintMessageColor("// shows a list of objects in which the Classroom field matches the given one, in the format “StLastName StFirstName”.\\n", color);
+			Console.WriteLine("-F[ile]: <filePath>");
+			PrintMessageColor("// changes the database file to the specified one, by default “student.txt”.", color);
+			Console.WriteLine("-Saveresult: <true/false>");
+			PrintMessageColor("// if “true”, the program saves the search results in the “result.csv” file (CSV format) instead of outputting them to the terminal, the default is “false”.", color);
+			Console.WriteLine("-Skipline: <number>");
+			PrintMessageColor("// specifies how many lines should be skipped when reading the database file, it is necessary to skip the table header if there is one, the default is “0”.", color);
+			Console.WriteLine("-S[tudent]: <lastName>");
+			PrintMessageColor("// shows a list of objects in which the StLastName field matches the given field, in the format “StLastName StFirstName | Grade | Classroom | TLastName TFirstName”.", color);
+			Console.WriteLine("-S[tudent]B[us]: <lastName>");
+			PrintMessageColor("// shows a list of objects in which the StLastName field matches the given field in the format “StLastName StFirstName | Bus”.", color);
+			Console.WriteLine("-T[eacher]: <lastname>");
+			PrintMessageColor("// shows a list of objects in which the TLastName field matches the given field in the format “StLastName StFirstName | TLastName TFirstName”.", color);
+			Console.WriteLine("-Q[uit]");
+			PrintMessageColor("// exits the program.", color);
+			Console.WriteLine("Enter comand:");
 		}
 
 		private static string ComandFindStudent(string lastName, out int count, out long time, bool findBus = false)
