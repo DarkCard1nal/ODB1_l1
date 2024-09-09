@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics;
 using System.Text;
-using System.Windows.Input;
 
 namespace l1
 {
@@ -140,7 +139,7 @@ namespace l1
 						Console.WriteLine("StLastName StFirstName | Grade | Classroom | TLastName TFirstName");
 						Console.WriteLine(result);
 					}
-					
+
 					Console.WriteLine($"Operation complete, found {count} match. Time spent {time} ms.\n");
 					break;
 				case "-SB":
@@ -311,7 +310,7 @@ namespace l1
 			}
 
 			List<Item> resultItems = items.GetListStudent(lastName);
-			
+
 			string result = "";
 			Stopwatch stopwatch = new();
 
