@@ -2,7 +2,7 @@
 {
 	internal abstract class FileStorage
 	{
-		public static ItemsList? DownloadDataTXT(string filePath)
+		public static ItemsList? DownloadDataTXT(string filePath, int skipLine)
 		{
 			string? fleExistsWrite = FileExistsWrite(filePath);
 			if (fleExistsWrite != null)
@@ -21,7 +21,11 @@
 				while (!reader.EndOfStream)
 				{
 					line = reader.ReadLine();
-					if (line == null) continue;
+					if (line == null || skipLine > 0)
+					{
+						skipLine--;
+						continue;
+					}
 
 					values = line.Split(',');
 
@@ -49,6 +53,28 @@
 			}
 
 			return items;
+		}
+
+		public static bool UploadDataTXT(string filePath, string text)
+		{
+			try
+			{
+				File.WriteAllText(filePath, text);
+				return true;
+			}
+			catch (UnauthorizedAccessException ex)
+			{
+				PrintMessageColor($"Error: insufficient permissions to write to the file.\n{ex.Message}", ConsoleColor.Red);
+			}
+			catch (DirectoryNotFoundException ex)
+			{
+				PrintMessageColor($"Error: directory not found.\n{ex.Message}", ConsoleColor.Red);
+			}
+			catch (Exception ex)
+			{
+				PrintMessageColor($"Error.\n{ex.Message}", ConsoleColor.Red);
+			}
+			return false;
 		}
 
 		public static void PrintMessageColor(string message, ConsoleColor color)

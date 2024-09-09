@@ -6,7 +6,10 @@ namespace l1
 	public class Program
 	{
 		private static string _filePath = "students.txt";
+		private static string _resFile = "result.csv";
 		private static bool _autoclosing = true;
+		private static bool _saveResult = false;
+		private static int _skipLine = 0;
 
 		public static void Main(string[] args)
 		{
@@ -55,8 +58,10 @@ namespace l1
 			if (input == null) return true;
 
 			const string wrongCommand = "Error wrong command. Use -H[elp].";
-			int i, number;
+			int i, number, count;
+			long time;
 			bool b = true;
+			string result;
 			string[] values = input.Split([':'], 2);
 			for (i = 0; i < values.Length; i++)
 			{
@@ -74,10 +79,14 @@ namespace l1
 				case "-Help":
 					Console.WriteLine(ComandHelp());
 					break;
+				case "-A":
+				case "-Author":
+					FileStorage.PrintMessageColor(ComandAuthor(), ConsoleColor.Green);
+					break;
 				case "-Autoclosing":
 					if (values.Length < 2 || !bool.TryParse(values[1], out b))
 					{
-						FileStorage.PrintMessageColor(wrongCommand, ConsoleColor.Red);
+						Console.WriteLine($"Autoclosing: {_autoclosing}");
 						break;
 					}
 					else
@@ -86,9 +95,29 @@ namespace l1
 						Console.WriteLine("Сommand is complete.");
 					}
 					break;
-				case "-A":
-				case "-Author":
-					FileStorage.PrintMessageColor(ComandAuthor(), ConsoleColor.Green);
+				case "-Saveresult":
+					if (values.Length < 2 || !bool.TryParse(values[1], out b))
+					{
+						Console.WriteLine($"Saveresult: {_saveResult}");
+						break;
+					}
+					else
+					{
+						_saveResult = b;
+						Console.WriteLine("Сommand is complete.");
+					}
+					break;
+				case "-Skipline":
+					if (values.Length < 2 || !int.TryParse(values[1], out i) || i < 0)
+					{
+						Console.WriteLine($"Skipline: {_skipLine}");
+						break;
+					}
+					else
+					{
+						_skipLine = i;
+						Console.WriteLine("Сommand is complete.");
+					}
 					break;
 				case "-S":
 				case "-Student":
@@ -98,9 +127,20 @@ namespace l1
 						break;
 					}
 
-					Console.WriteLine("StLastName StFirstName | Grade | Classroom | TLastName TFirstName");
+					result = ComandFindStudent(values[1], out count, out time);
 
-					Console.WriteLine(ComandFindStudent(values[1]));
+					if (_saveResult)
+					{
+						result = "StLastName, StFirstName, Grade, Classroom, TLastName, TFirstName\n" + result;
+						FileStorage.UploadDataTXT(_resFile, result);
+					}
+					else
+					{
+						Console.WriteLine("StLastName StFirstName | Grade | Classroom | TLastName TFirstName");
+						Console.WriteLine(result);
+					}
+					
+					Console.WriteLine($"Operation complete, found {count} match. Time spent {time} ms.\n");
 					break;
 				case "-SB":
 				case "-SBus":
@@ -112,15 +152,26 @@ namespace l1
 						break;
 					}
 
-					Console.WriteLine("StLastName StFirstName | Bus");
+					result = ComandFindStudent(values[1], out count, out time, true);
 
-					Console.WriteLine(ComandFindStudent(values[1], true));
+					if (_saveResult)
+					{
+						result = "StLastName, StFirstName, Bus\n" + result;
+						FileStorage.UploadDataTXT(_resFile, result);
+					}
+					else
+					{
+						Console.WriteLine("StLastName StFirstName | Bus");
+						Console.WriteLine(result);
+					}
+
+					Console.WriteLine($"Operation complete, found {count} match. Time spent {time} ms.\n");
 					break;
 				case "-F":
 				case "-File":
 					if (values.Length < 2)
 					{
-						FileStorage.PrintMessageColor(wrongCommand, ConsoleColor.Red);
+						Console.WriteLine($"File: {_filePath}");
 						break;
 					}
 					input = FileStorage.FileExistsWrite(values[1]);
@@ -143,9 +194,20 @@ namespace l1
 						break;
 					}
 
-					Console.WriteLine("StLastName StFirstName | TLastName TFirstName");
+					result = ComandFindTeacher(values[1], out count, out time);
 
-					Console.WriteLine(ComandFindTeacher(values[1]));
+					if (_saveResult)
+					{
+						result = "StLastName, StFirstName, TLastName, TFirstName\n" + result;
+						FileStorage.UploadDataTXT(_resFile, result);
+					}
+					else
+					{
+						Console.WriteLine("StLastName StFirstName | TLastName TFirstName");
+						Console.WriteLine(result);
+					}
+
+					Console.WriteLine($"Operation complete, found {count} match. Time spent {time} ms.\n");
 					break;
 				case "-C":
 				case "-Classroom":
@@ -155,9 +217,20 @@ namespace l1
 						break;
 					}
 
-					Console.WriteLine("StLastName StFirstName");
+					result = ComandFindClassroom(number, out count, out time);
 
-					Console.WriteLine(ComandFindClassroom(number));
+					if (_saveResult)
+					{
+						result = "StLastName, StFirstName\n" + result;
+						FileStorage.UploadDataTXT(_resFile, result);
+					}
+					else
+					{
+						Console.WriteLine("StLastName StFirstName");
+						Console.WriteLine(result);
+					}
+
+					Console.WriteLine($"Operation complete, found {count} match. Time spent {time} ms.\n");
 					break;
 				case "-B":
 				case "-Bus":
@@ -167,9 +240,20 @@ namespace l1
 						break;
 					}
 
-					Console.WriteLine("StLastName StFirstName | Grade | Classroom");
+					result = ComandFindBus(number, out count, out time);
 
-					Console.WriteLine(ComandFindBus(number));
+					if (_saveResult)
+					{
+						result = "StLastName, StFirstName, Grade, Classroom\"\n" + result;
+						FileStorage.UploadDataTXT(_resFile, result);
+					}
+					else
+					{
+						Console.WriteLine("StLastName StFirstName | Grade | Classroom");
+						Console.WriteLine(result);
+					}
+
+					Console.WriteLine($"Operation complete, found {count} match. Time spent {time} ms.\n");
 					break;
 				default:
 					FileStorage.PrintMessageColor(wrongCommand, ConsoleColor.Red);
@@ -189,9 +273,11 @@ namespace l1
 					"-H[elp]\n" +
 					"-A[uthor]\n" +
 					"-Autoclosing: <true/false>\n" +
-					"-B[us]: <Number>\n" +
-					"-C[lassroom]: <Number>\n" +
+					"-B[us]: <number>\n" +
+					"-C[lassroom]: <number>\n" +
 					"-F[ile]: <filePath>\n" +
+					"-Saveresult: <true/false>\n" +
+					"-Skipline: <number>\n" +
 					"-S[tudent]: <lastName>\n" +
 					"-S[tudent]B[us]: <lastName>\n" +
 					"-T[eacher]: <lastname>\n" +
@@ -199,9 +285,11 @@ namespace l1
 					"Enter comand:\n";
 		}
 
-		private static string ComandFindStudent(string lastName, bool findBus = false)
+		private static string ComandFindStudent(string lastName, out int count, out long time, bool findBus = false)
 		{
-			ItemsList? items = FileStorage.DownloadDataTXT(_filePath);
+			ItemsList? items = FileStorage.DownloadDataTXT(_filePath, _skipLine);
+			count = 0;
+			time = 0;
 
 			if (items == null)
 			{
@@ -209,13 +297,13 @@ namespace l1
 			}
 
 			List<Item> resultItems = items.GetListStudent(lastName);
-			int count = 0;
+			
 			string result = "";
 			Stopwatch stopwatch = new();
 
 			stopwatch.Start();
 
-			if (resultItems.Count == 0)
+			if (resultItems.Count == 0 && !_saveResult)
 			{
 				result += "None\n";
 			}
@@ -223,9 +311,19 @@ namespace l1
 			{
 				var res = resultItems.Select(item => new { item.StLastName, item.StFirstName, item.Bus });
 
-				foreach (var item in res)
+				if (_saveResult)
 				{
-					result += $"{item.StLastName} {item.StFirstName} | {item.Bus}\n";
+					foreach (var item in res)
+					{
+						result += $"{item.StLastName}, {item.StFirstName}, {item.Bus}\n";
+					}
+				}
+				else
+				{
+					foreach (var item in res)
+					{
+						result += $"{item.StLastName}, {item.StFirstName}, {item.Bus}\n";
+					}
 				}
 
 				count = res.Count();
@@ -234,26 +332,36 @@ namespace l1
 			{
 				var res = resultItems.Select(item => new { item.StLastName, item.StFirstName, item.Grade, item.Classroom, item.TLastName, item.TFirstName });
 
-				foreach (var item in res)
+				if (_saveResult)
 				{
-					result += $"{item.StLastName} {item.StFirstName} | {item.Grade} | {item.Classroom} | {item.TLastName} {item.TFirstName}\n";
+					foreach (var item in res)
+					{
+						result += $"{item.StLastName}, {item.StFirstName}, {item.Grade}, {item.Classroom}, {item.TLastName}, {item.TFirstName}\n";
+					}
+				}
+				else
+				{
+					foreach (var item in res)
+					{
+						result += $"{item.StLastName} {item.StFirstName} | {item.Grade} | {item.Classroom} | {item.TLastName} {item.TFirstName}\n";
+					}
 				}
 
 				count = res.Count();
 			}
 
 			stopwatch.Stop();
-
+			time = stopwatch.ElapsedMilliseconds;
 			items.Clear();
-
-			result += $"Operation complete, found {count} match. Time spent {stopwatch.ElapsedMilliseconds} ms.\n";
 
 			return result;
 		}
 
-		private static string ComandFindTeacher(string lastName)
+		private static string ComandFindTeacher(string lastName, out int count, out long time)
 		{
-			ItemsList? items = FileStorage.DownloadDataTXT(_filePath);
+			ItemsList? items = FileStorage.DownloadDataTXT(_filePath, _skipLine);
+			count = 0;
+			time = 0;
 
 			if (items == null)
 			{
@@ -262,12 +370,11 @@ namespace l1
 
 			List<Item> resultItems = items.GetListTeacher(lastName);
 			string result = "";
-			int count = 0;
 			Stopwatch stopwatch = new();
 
 			stopwatch.Start();
 
-			if (resultItems.Count == 0)
+			if (resultItems.Count == 0 && !_saveResult)
 			{
 				result += "None\n";
 			}
@@ -275,26 +382,36 @@ namespace l1
 			{
 				var res = resultItems.Select(item => new { item.StLastName, item.StFirstName, item.TLastName, item.TFirstName });
 
-				foreach (var item in res)
+				if (_saveResult)
 				{
-					result += $"{item.StLastName} {item.StFirstName} | {item.TLastName} {item.TFirstName}\n";
+					foreach (var item in res)
+					{
+						result += $"{item.StLastName}, {item.StFirstName}, {item.TLastName}, {item.TFirstName}\n";
+					}
+				}
+				else
+				{
+					foreach (var item in res)
+					{
+						result += $"{item.StLastName} {item.StFirstName} | {item.TLastName} {item.TFirstName}\n";
+					}
 				}
 
 				count = res.Count();
 			}
 
 			stopwatch.Stop();
-
-			result += $"Operation complete, found {count} match. Time spent {stopwatch.ElapsedMilliseconds} ms.\n";
-
+			time = stopwatch.ElapsedMilliseconds;
 			items.Clear();
 
 			return result;
 		}
 
-		private static string ComandFindClassroom(int number)
+		private static string ComandFindClassroom(int number, out int count, out long time)
 		{
-			ItemsList? items = FileStorage.DownloadDataTXT(_filePath);
+			ItemsList? items = FileStorage.DownloadDataTXT(_filePath, _skipLine);
+			count = 0;
+			time = 0;
 
 			if (items == null)
 			{
@@ -303,12 +420,11 @@ namespace l1
 
 			List<Item> resultItems = items.GetListClassroom(number);
 			string result = "";
-			int count = 0;
 			Stopwatch stopwatch = new();
 
 			stopwatch.Start();
 
-			if (resultItems.Count == 0)
+			if (resultItems.Count == 0 && !_saveResult)
 			{
 				result += "None\n";
 			}
@@ -316,26 +432,36 @@ namespace l1
 			{
 				var res = resultItems.Select(item => new { item.StLastName, item.StFirstName });
 
-				foreach (var item in res)
+				if (_saveResult)
 				{
-					result += $"{item.StLastName} {item.StFirstName}\n";
+					foreach (var item in res)
+					{
+						result += $"{item.StLastName}, {item.StFirstName}\n";
+					}
+				}
+				else
+				{
+					foreach (var item in res)
+					{
+						result += $"{item.StLastName} {item.StFirstName}\n";
+					}
 				}
 
 				count = res.Count();
 			}
 
 			stopwatch.Stop();
-
-			result += $"Operation complete, found {count} match. Time spent {stopwatch.ElapsedMilliseconds} ms.\n";
-
+			time = stopwatch.ElapsedMilliseconds;
 			items.Clear();
 
 			return result;
 		}
 
-		private static string ComandFindBus(int number)
+		private static string ComandFindBus(int number, out int count, out long time)
 		{
-			ItemsList? items = FileStorage.DownloadDataTXT(_filePath);
+			ItemsList? items = FileStorage.DownloadDataTXT(_filePath, _skipLine);
+			count = 0;
+			time = 0;
 
 			if (items == null)
 			{
@@ -344,12 +470,11 @@ namespace l1
 
 			List<Item> resultItems = items.GetListBus(number);
 			string result = "";
-			int count = 0;
 			Stopwatch stopwatch = new();
 
 			stopwatch.Start();
 
-			if (resultItems.Count == 0)
+			if (resultItems.Count == 0 && !_saveResult)
 			{
 				result += "None\n";
 			}
@@ -357,18 +482,26 @@ namespace l1
 			{
 				var res = resultItems.Select(item => new { item.StLastName, item.StFirstName, item.Grade, item.Classroom });
 
-				foreach (var item in res)
+				if (_saveResult)
 				{
-					result += $"{item.StLastName} {item.StFirstName} | {item.Grade} | {item.Classroom}\n";
+					foreach (var item in res)
+					{
+						result += $"{item.StLastName}, {item.StFirstName}, {item.Grade}, {item.Classroom}\n";
+					}
+				}
+				else
+				{
+					foreach (var item in res)
+					{
+						result += $"{item.StLastName} {item.StFirstName} | {item.Grade} | {item.Classroom}\n";
+					}
 				}
 
 				count = res.Count();
 			}
 
 			stopwatch.Stop();
-
-			result += $"Operation complete, found {count} match. Time spent {stopwatch.ElapsedMilliseconds} ms.\n";
-
+			time = stopwatch.ElapsedMilliseconds;
 			items.Clear();
 
 			return result;
