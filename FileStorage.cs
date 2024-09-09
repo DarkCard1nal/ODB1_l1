@@ -7,7 +7,7 @@
 			string? fleExistsWrite = FileExistsWrite(filePath);
 			if (fleExistsWrite != null)
 			{
-				PrintMessageColor(fleExistsWrite, ConsoleColor.Red);
+				Program.PrintMessageColor(fleExistsWrite, ConsoleColor.Red);
 				return null;
 			}
 			
@@ -46,7 +46,7 @@
 					}
 					catch (FormatException ex)
 					{
-						PrintMessageColor($"Error during string line processing: {line}. Error: {ex.Message}.", ConsoleColor.Red);
+						Program.PrintMessageColor($"Error during string line processing: {line}. Error: {ex.Message}.", ConsoleColor.Red);
 
 					}
 				}
@@ -64,25 +64,17 @@
 			}
 			catch (UnauthorizedAccessException ex)
 			{
-				PrintMessageColor($"Error: insufficient permissions to write to the file.\n{ex.Message}", ConsoleColor.Red);
+				Program.PrintMessageColor($"Error: insufficient permissions to write to the file.\n{ex.Message}", ConsoleColor.Red);
 			}
 			catch (DirectoryNotFoundException ex)
 			{
-				PrintMessageColor($"Error: directory not found.\n{ex.Message}", ConsoleColor.Red);
+				Program.PrintMessageColor($"Error: directory not found.\n{ex.Message}", ConsoleColor.Red);
 			}
 			catch (Exception ex)
 			{
-				PrintMessageColor($"Error.\n{ex.Message}", ConsoleColor.Red);
+				Program.PrintMessageColor($"Error.\n{ex.Message}", ConsoleColor.Red);
 			}
 			return false;
-		}
-
-		public static void PrintMessageColor(string message, ConsoleColor color)
-		{
-			ConsoleColor oldColor = Console.ForegroundColor;
-			Console.ForegroundColor = color;
-			Console.WriteLine(message);
-			Console.ForegroundColor = oldColor;
 		}
 
 		public static string? FileExistsWrite(string filePath)

@@ -21,7 +21,7 @@ namespace l1
 
 			if (args.Length == 0)
 			{
-				FileStorage.PrintMessageColor(ComandAuthor(), ConsoleColor.Green);
+				PrintMessageColor(ComandAuthor(), ConsoleColor.Green);
 				Console.WriteLine(ComandHelp());
 
 				do
@@ -81,7 +81,7 @@ namespace l1
 					break;
 				case "-A":
 				case "-Author":
-					FileStorage.PrintMessageColor(ComandAuthor(), ConsoleColor.Green);
+					PrintMessageColor(ComandAuthor(), ConsoleColor.Green);
 					break;
 				case "-Autoclosing":
 					if (values.Length < 2 || !bool.TryParse(values[1], out b))
@@ -123,7 +123,7 @@ namespace l1
 				case "-Student":
 					if (values.Length < 2)
 					{
-						FileStorage.PrintMessageColor(wrongCommand, ConsoleColor.Red);
+						PrintMessageColor(wrongCommand, ConsoleColor.Red);
 						break;
 					}
 
@@ -148,7 +148,7 @@ namespace l1
 				case "-StudentBus":
 					if (values.Length < 2)
 					{
-						FileStorage.PrintMessageColor(wrongCommand, ConsoleColor.Red);
+						PrintMessageColor(wrongCommand, ConsoleColor.Red);
 						break;
 					}
 
@@ -178,7 +178,7 @@ namespace l1
 
 					if (input != null)
 					{
-						FileStorage.PrintMessageColor("The new file was not accepted.\n" + input, ConsoleColor.Red);
+						PrintMessageColor("The new file was not accepted.\n" + input, ConsoleColor.Red);
 					}
 					else
 					{
@@ -190,7 +190,7 @@ namespace l1
 				case "-Teacher":
 					if (values.Length < 2)
 					{
-						FileStorage.PrintMessageColor(wrongCommand, ConsoleColor.Red);
+						PrintMessageColor(wrongCommand, ConsoleColor.Red);
 						break;
 					}
 
@@ -213,7 +213,7 @@ namespace l1
 				case "-Classroom":
 					if (values.Length < 1 || !int.TryParse(values[1], out number))
 					{
-						FileStorage.PrintMessageColor(wrongCommand, ConsoleColor.Red);
+						PrintMessageColor(wrongCommand, ConsoleColor.Red);
 						break;
 					}
 
@@ -236,7 +236,7 @@ namespace l1
 				case "-Bus":
 					if (values.Length < 1 || !int.TryParse(values[1], out number))
 					{
-						FileStorage.PrintMessageColor(wrongCommand, ConsoleColor.Red);
+						PrintMessageColor(wrongCommand, ConsoleColor.Red);
 						break;
 					}
 
@@ -256,7 +256,7 @@ namespace l1
 					Console.WriteLine($"Operation complete, found {count} match. Time spent {time} ms.\n");
 					break;
 				default:
-					FileStorage.PrintMessageColor(wrongCommand, ConsoleColor.Red);
+					PrintMessageColor(wrongCommand, ConsoleColor.Red);
 					break;
 			}
 			return true;
@@ -505,6 +505,14 @@ namespace l1
 			items.Clear();
 
 			return result;
+		}
+
+		public static void PrintMessageColor(string message, ConsoleColor color)
+		{
+			ConsoleColor oldColor = Console.ForegroundColor;
+			Console.ForegroundColor = color;
+			Console.WriteLine(message);
+			Console.ForegroundColor = oldColor;
 		}
 	}
 }
