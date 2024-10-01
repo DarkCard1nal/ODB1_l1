@@ -31,5 +31,17 @@
 		{
 			return $"{StLastName} {StFirstName} | {Grade} | {Classroom} | {Bus}";
 		}
+
+		public static ItemStudent ParseItem(string[] sringsLine)
+		{
+			try
+			{
+				return new ItemStudent(sringsLine[0].Trim(), sringsLine[1].Trim(), int.Parse(sringsLine[2].Trim()), int.Parse(sringsLine[3].Trim()), int.Parse(sringsLine[4].Trim()));
+			}
+			catch (Exception)
+			{
+				throw;
+			}
+		}
 	}
 }

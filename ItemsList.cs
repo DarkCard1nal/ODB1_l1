@@ -3,32 +3,54 @@
 	internal class ItemsList
 	{
 		private List<ItemStudent> _itemsStudent;
-		private List<ItemTeacher> _itemsTtudent;
+		private List<ItemTeacher> _itemsTeacher;
 
 		public ItemsList()
 		{
 			_itemsStudent = [];
-			_itemsTtudent = [];
+			_itemsTeacher = [];
 		}
 
-		public ItemsList(List<ItemStudent> items)
+		public ItemsList(List<ItemStudent> itemsStudent, List<ItemTeacher> itemsTeacher)
 		{
-			_itemsStudent = new List<ItemStudent>(items);
+			_itemsStudent = new List<ItemStudent>(itemsStudent);
+			_itemsTeacher = new List<ItemTeacher>(itemsTeacher);
 		}
 
-		public void Add(ItemStudent item)
+		public void AddStudent(ItemStudent item)
 		{
 			_itemsStudent.Add(item);
 		}
 
-		public void Clear()
+		public void AddTeacher(ItemTeacher item)
+		{
+			_itemsTeacher.Add(item);
+		}
+
+		public void ClearStudent()
 		{
 			_itemsStudent.Clear();
 		}
 
-		public ItemStudent GetItem(int index)
+		public void ClearTeacher()
+		{
+			_itemsTeacher.Clear();
+		}
+
+		public void Clear()
+		{
+			ClearStudent();
+			ClearTeacher();
+		}
+
+		public ItemStudent GetItemStudent(int index)
 		{
 			return _itemsStudent[index];
+		}
+
+		public ItemTeacher GetItemTeacher(int index)
+		{
+			return _itemsTeacher[index];
 		}
 
 		public List<ItemStudent> GetListStudent(string stLastName)
@@ -36,9 +58,9 @@
 			return _itemsStudent.Where(item => item.StLastName.Equals(stLastName, StringComparison.CurrentCultureIgnoreCase)).Select(item => item).ToList();
 		}
 
-		public List<ItemStudent> GetListTeacher(string tLastName)
+		public List<ItemTeacher> GetListTeacher(string tLastName)
 		{
-			return _itemsStudent.Where(item => item.TLastName.Equals(tLastName, StringComparison.CurrentCultureIgnoreCase)).Select(item => item).ToList();
+			return _itemsTeacher.Where(item => item.TLastName.Equals(tLastName, StringComparison.CurrentCultureIgnoreCase)).Select(item => item).ToList();
 		}
 
 		public List<ItemStudent> GetListClassroom(int classroom)

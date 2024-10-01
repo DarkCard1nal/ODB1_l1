@@ -25,5 +25,17 @@
 		{
 			return $"{TLastName} {TFirstName} | {Classroom}";
 		}
+
+		public static ItemTeacher ParseItem(string[] sringsLine)
+		{
+			try
+			{
+				return new ItemTeacher(sringsLine[0].Trim(), sringsLine[1].Trim(), int.Parse(sringsLine[2].Trim()));
+			}
+			catch (Exception)
+			{
+				throw;
+			}
+		}
 	}
 }
