@@ -5,11 +5,17 @@
 		public static ItemsList? DownloadDataListTXT(string fileStudentPath, string fileTeacherPath, int skipLine)
 		{
 			ItemsList items = new();
+			bool fileStudentExistsWrite, fileTeacherExistsWrite;
 
-			DownloadDataTXT(fileStudentPath, skipLine, 
+			fileStudentExistsWrite = DownloadDataTXT(fileStudentPath, skipLine, 
 				ItemStudent.Count, (values) => items.AddStudent(ItemStudent.ParseItem(values)));
-			DownloadDataTXT(fileTeacherPath, skipLine, 
+			fileTeacherExistsWrite = DownloadDataTXT(fileTeacherPath, skipLine, 
 				ItemTeacher.Count, (values) => items.AddTeacher(ItemTeacher.ParseItem(values)));
+
+			if (fileStudentExistsWrite == false || fileTeacherExistsWrite == false)
+			{
+				return null;
+			}
 
 			return items;
 		}
@@ -64,10 +70,10 @@
 
 		private static bool DownloadDataTXT(string filePath, int skipLine, int count, Action<string[]> methodAdd)
 		{
-			string? fleExistsWrite = FileExistsWrite(filePath);
-			if (fleExistsWrite != null)
+			string? fileExistsWrite = FileExistsWrite(filePath);
+			if (fileExistsWrite != null)
 			{
-				Program.PrintMessageColor(fleExistsWrite, ConsoleColor.Red);
+				Program.PrintMessageColor(fileExistsWrite, ConsoleColor.Red);
 				return false;
 			}
 
