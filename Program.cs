@@ -5,8 +5,7 @@ namespace l1
 {
 	public class Program
 	{
-		private static string _fileStudentPath = "list.txt";
-		private static string _fileTeacherPath = "teachers.txt";
+		private static string _filePath = "students.txt";
 		private static string _resFile = "result.csv";
 		private static bool _autoclosing = true;
 		private static bool _saveResult = false;
@@ -301,7 +300,7 @@ namespace l1
 
 		private static string ComandFindStudent(string lastName, out int count, out long time, bool findBus = false)
 		{
-			ItemsList? items = FileStorage.DownloadDataListTXT(_filePath, _skipLine);
+			ItemsList? items = FileStorage.DownloadDataTXT(_filePath, _skipLine);
 			count = 0;
 			time = 0;
 
