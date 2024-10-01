@@ -29,10 +29,10 @@
 
 					values = line.Split(',');
 
-					if (values.Length < Item.Count)
+					if (values.Length < ItemStudent.Count)
 					{
 						tmp = values;
-						values = new string[Item.Count];
+						values = new string[ItemStudent.Count];
 						Array.Fill(values, "0");
 						Array.Copy(tmp, values, tmp.Length);
 
@@ -42,7 +42,7 @@
 					try
 					{
 						// Add new Item to ItemsList
-						items.Add(new Item(values[0].Trim(), values[1].Trim(), int.Parse(values[2].Trim()), int.Parse(values[3].Trim()), int.Parse(values[4].Trim()), values[5].Trim(), values[6].Trim()));
+						items.Add(new ItemStudent(values[0].Trim(), values[1].Trim(), int.Parse(values[2].Trim()), int.Parse(values[3].Trim()), int.Parse(values[4].Trim()), values[5].Trim(), values[6].Trim()));
 					}
 					catch (FormatException ex)
 					{

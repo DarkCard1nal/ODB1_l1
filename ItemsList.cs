@@ -2,51 +2,53 @@
 {
 	internal class ItemsList
 	{
-		private List<Item> _items;
+		private List<ItemStudent> _itemsStudent;
+		private List<ItemTeacher> _itemsTtudent;
 
 		public ItemsList()
 		{
-			_items = [];
+			_itemsStudent = [];
+			_itemsTtudent = [];
 		}
 
-		public ItemsList(List<Item> items)
+		public ItemsList(List<ItemStudent> items)
 		{
-			_items = new List<Item>(items);
+			_itemsStudent = new List<ItemStudent>(items);
 		}
 
-		public void Add(Item item)
+		public void Add(ItemStudent item)
 		{
-			_items.Add(item);
+			_itemsStudent.Add(item);
 		}
 
 		public void Clear()
 		{
-			_items.Clear();
+			_itemsStudent.Clear();
 		}
 
-		public Item GetItem(int index)
+		public ItemStudent GetItem(int index)
 		{
-			return _items[index];
+			return _itemsStudent[index];
 		}
 
-		public List<Item> GetListStudent(string stLastName)
+		public List<ItemStudent> GetListStudent(string stLastName)
 		{
-			return _items.Where(item => item.StLastName.Equals(stLastName, StringComparison.CurrentCultureIgnoreCase)).Select(item => item).ToList();
+			return _itemsStudent.Where(item => item.StLastName.Equals(stLastName, StringComparison.CurrentCultureIgnoreCase)).Select(item => item).ToList();
 		}
 
-		public List<Item> GetListTeacher(string tLastName)
+		public List<ItemStudent> GetListTeacher(string tLastName)
 		{
-			return _items.Where(item => item.TLastName.Equals(tLastName, StringComparison.CurrentCultureIgnoreCase)).Select(item => item).ToList();
+			return _itemsStudent.Where(item => item.TLastName.Equals(tLastName, StringComparison.CurrentCultureIgnoreCase)).Select(item => item).ToList();
 		}
 
-		public List<Item> GetListClassroom(int classroom)
+		public List<ItemStudent> GetListClassroom(int classroom)
 		{
-			return _items.Where(item => item.Classroom == classroom).Select(item => item).ToList();
+			return _itemsStudent.Where(item => item.Classroom == classroom).Select(item => item).ToList();
 		}
 
-		public List<Item> GetListBus(int bus)
+		public List<ItemStudent> GetListBus(int bus)
 		{
-			return _items.Where(item => item.Bus == bus).Select(item => item).ToList();
+			return _itemsStudent.Where(item => item.Bus == bus).Select(item => item).ToList();
 		}
 	}
 }

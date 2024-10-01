@@ -309,7 +309,7 @@ namespace l1
 				return "Use -H[elp] or F[ile]: <filePath>";
 			}
 
-			List<Item> resultItems = items.GetListStudent(lastName);
+			List<ItemStudent> resultItems = items.GetListStudent(lastName);
 
 			string result = "";
 			Stopwatch stopwatch = new();
@@ -381,7 +381,7 @@ namespace l1
 				return "Use -H[elp] or F[ile]: <filePath>";
 			}
 
-			List<Item> resultItems = items.GetListTeacher(lastName);
+			List<ItemStudent> resultItems = items.GetListTeacher(lastName);
 			string result = "";
 			Stopwatch stopwatch = new();
 
@@ -431,7 +431,7 @@ namespace l1
 				return "Use -H[elp] or F[ile]: <filePath>";
 			}
 
-			List<Item> resultItems = items.GetListClassroom(number);
+			List<ItemStudent> resultItems = items.GetListClassroom(number);
 			string result = "";
 			Stopwatch stopwatch = new();
 
@@ -481,7 +481,7 @@ namespace l1
 				return "Use -H[elp] or F[ile]: <filePath>";
 			}
 
-			List<Item> resultItems = items.GetListBus(number);
+			List<ItemStudent> resultItems = items.GetListBus(number);
 			string result = "";
 			Stopwatch stopwatch = new();
 
