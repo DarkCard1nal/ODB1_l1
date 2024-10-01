@@ -41,4 +41,10 @@ The structure of database storage has been changed, now instead of a single file
 As a result of the structure change, other classes and methods were changed and modernized. Also, repetitive lines in the database files have been removed, resulting in a much faster search time.
 
 # Comparison of l2 and l1:
+![image](https://github.com/user-attachments/assets/68fa3b79-9216-4ae6-a56a-389346a85bf0)
+![image](https://github.com/user-attachments/assets/542dac5d-f229-4a26-9ed5-99a418d2b34c)
 
+`-T: FAFARD`
+
+![image](https://github.com/user-attachments/assets/bee7fb56-be12-4de6-889e-e3e441c41329)
+![image](https://github.com/user-attachments/assets/9ff31b70-bcbf-4197-9c5d-6b9cc86492f1)
