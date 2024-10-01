@@ -1,4 +1,4 @@
-# ODB_l1 Schoolsearch
+# ODB_l1 (1 - 2) Schoolsearch
 _Created for the course "Organization of databases" V. N. Karazin Kharkiv National University_
 
 C# 12.0 .NET 8.0  console program for writing a text file database management DBMS.
