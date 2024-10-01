@@ -55,22 +55,27 @@
 
 		public List<ItemStudent> GetListStudent(string stLastName)
 		{
-			return _itemsStudent.Where(item => item.StLastName.Equals(stLastName, StringComparison.CurrentCultureIgnoreCase)).Select(item => item).ToList();
+			return _itemsStudent.Where(item => item.StLastName.Equals(stLastName, StringComparison.CurrentCultureIgnoreCase)).ToList();
 		}
 
 		public List<ItemTeacher> GetListTeacher(string tLastName)
 		{
-			return _itemsTeacher.Where(item => item.TLastName.Equals(tLastName, StringComparison.CurrentCultureIgnoreCase)).Select(item => item).ToList();
+			return _itemsTeacher.Where(item => item.TLastName.Equals(tLastName, StringComparison.CurrentCultureIgnoreCase)).ToList();
+		}
+
+		public ItemTeacher GetFirstTeacherClassroom(int classroom)
+		{
+			return _itemsTeacher.First(item => item.Classroom == classroom);
 		}
 
 		public List<ItemStudent> GetListClassroom(int classroom)
 		{
-			return _itemsStudent.Where(item => item.Classroom == classroom).Select(item => item).ToList();
+			return _itemsStudent.Where(item => item.Classroom == classroom).ToList();
 		}
 
 		public List<ItemStudent> GetListBus(int bus)
 		{
-			return _itemsStudent.Where(item => item.Bus == bus).Select(item => item).ToList();
+			return _itemsStudent.Where(item => item.Bus == bus).ToList();
 		}
 	}
 }

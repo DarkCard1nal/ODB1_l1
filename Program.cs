@@ -5,7 +5,8 @@ namespace l1
 {
 	public class Program
 	{
-		private static string _filePath = "students.txt";
+		private static string _fileStudentPath = "list.txt";
+		private static string _fileTeacherPath = "teachers.txt";
 		private static string _resFile = "result.csv";
 		private static bool _autoclosing = true;
 		private static bool _saveResult = false;
@@ -60,7 +61,7 @@ namespace l1
 			const string wrongCommand = "Error wrong command. Use -H[elp].";
 			int i, number, count;
 			long time;
-			bool b = true;
+			bool b;
 			string result;
 			string[] values = input.Split([':'], 2);
 			for (i = 0; i < values.Length; i++)
@@ -167,11 +168,13 @@ namespace l1
 
 					Console.WriteLine($"Operation complete, found {count} match. Time spent {time} ms.\n");
 					break;
-				case "-F":
-				case "-File":
+				case "-FS":
+				case "-FStudent":
+				case "-FileS":
+				case "-FileStudent":
 					if (values.Length < 2)
 					{
-						Console.WriteLine($"File: {_filePath}");
+						Console.WriteLine($"File: {_fileStudentPath}");
 						break;
 					}
 					input = FileStorage.FileExistsWrite(values[1]);
@@ -182,7 +185,28 @@ namespace l1
 					}
 					else
 					{
-						_filePath = values[1];
+						_fileStudentPath = values[1];
+						Console.WriteLine("New file accepted.");
+					}
+					break;
+				case "-FT":
+				case "-FTeacher":
+				case "-FileT":
+				case "-FileTeacher":
+					if (values.Length < 2)
+					{
+						Console.WriteLine($"File: {_fileTeacherPath}");
+						break;
+					}
+					input = FileStorage.FileExistsWrite(values[1]);
+
+					if (input != null)
+					{
+						PrintMessageColor("The new file was not accepted.\n" + input, ConsoleColor.Red);
+					}
+					else
+					{
+						_fileTeacherPath = values[1];
 						Console.WriteLine("New file accepted.");
 					}
 					break;
@@ -281,8 +305,10 @@ namespace l1
 			PrintMessageColor("// shows a list of objects in which the Bus field matches the data in the format “StLastName StFirstName | Grade | Classroom”.", color);
 			Console.WriteLine("-C[lassroom]: <number>");
 			PrintMessageColor("// shows a list of objects in which the Classroom field matches the given one, in the format “StLastName StFirstName”.\\n", color);
-			Console.WriteLine("-F[ile]: <filePath>");
-			PrintMessageColor("// changes the database file to the specified one, by default “student.txt”.", color);
+			Console.WriteLine("-F[ile]S[tudent]: <filePath>");
+			PrintMessageColor("// changes the Student database file to the specified one, by default “list.txt”.", color);
+			Console.WriteLine("-F[ile]T[eacher]: <filePath>");
+			PrintMessageColor("// changes the Teacher database file to the specified one, by default “teachers.txt”.", color);
 			Console.WriteLine("-Saveresult: <true/false>");
 			PrintMessageColor("// if “true”, the program saves the search results in the “result.csv” file (CSV format) instead of outputting them to the terminal, the default is “false”.", color);
 			Console.WriteLine("-Skipline: <number>");
@@ -300,7 +326,7 @@ namespace l1
 
 		private static string ComandFindStudent(string lastName, out int count, out long time, bool findBus = false)
 		{
-			ItemsList? items = FileStorage.DownloadDataTXT(_filePath, _skipLine);
+			ItemsList? items = FileStorage.DownloadDataListTXT(_fileStudentPath, _fileTeacherPath, _skipLine);
 			count = 0;
 			time = 0;
 
@@ -335,7 +361,7 @@ namespace l1
 				{
 					foreach (var item in res)
 					{
-						result += $"{item.StLastName}, {item.StFirstName}, {item.Bus}\n";
+						result += $"{item.StLastName} | {item.StFirstName} | {item.Bus}\n";
 					}
 				}
 
@@ -343,7 +369,15 @@ namespace l1
 			}
 			else
 			{
-				var res = resultItems.Select(item => new { item.StLastName, item.StFirstName, item.Grade, item.Classroom, item.TLastName, item.TFirstName });
+				var res = resultItems.SelectMany(item => new[] { items.GetFirstTeacherClassroom(item.Classroom) }, (item, teacher) => new
+				{
+					item.StLastName,
+					item.StFirstName,
+					item.Grade,
+					item.Classroom,
+					teacher?.TLastName,
+					teacher?.TFirstName
+				});
 
 				if (_saveResult)
 				{
@@ -372,7 +406,7 @@ namespace l1
 
 		private static string ComandFindTeacher(string lastName, out int count, out long time)
 		{
-			ItemsList? items = FileStorage.DownloadDataTXT(_filePath, _skipLine);
+			ItemsList? items = FileStorage.DownloadDataListTXT(_fileStudentPath, _fileTeacherPath, _skipLine);
 			count = 0;
 			time = 0;
 
@@ -381,7 +415,7 @@ namespace l1
 				return "Use -H[elp] or F[ile]: <filePath>";
 			}
 
-			List<ItemStudent> resultItems = items.GetListTeacher(lastName);
+			List<ItemTeacher> resultItems = items.GetListTeacher(lastName);
 			string result = "";
 			Stopwatch stopwatch = new();
 
@@ -393,24 +427,27 @@ namespace l1
 			}
 			else
 			{
-				var res = resultItems.Select(item => new { item.StLastName, item.StFirstName, item.TLastName, item.TFirstName });
-
-				if (_saveResult)
+				foreach (ItemTeacher teacher in resultItems)
 				{
-					foreach (var item in res)
-					{
-						result += $"{item.StLastName}, {item.StFirstName}, {item.TLastName}, {item.TFirstName}\n";
-					}
-				}
-				else
-				{
-					foreach (var item in res)
-					{
-						result += $"{item.StLastName} {item.StFirstName} | {item.TLastName} {item.TFirstName}\n";
-					}
-				}
+					var res = items.GetListClassroom(teacher.Classroom).Select(item => new { item.StLastName, item.StFirstName, teacher.TLastName, teacher.TFirstName });
 
-				count = res.Count();
+					if (_saveResult)
+					{
+						foreach (var item in res)
+						{
+							result += $"{item.StLastName}, {item.StFirstName}, {item.TLastName}, {item.TFirstName}\n";
+						}
+					}
+					else
+					{
+						foreach (var item in res)
+						{
+							result += $"{item.StLastName} {item.StFirstName} | {item.TLastName} {item.TFirstName}\n";
+						}
+					}
+
+					count += res.Count();
+				}
 			}
 
 			stopwatch.Stop();
@@ -422,7 +459,7 @@ namespace l1
 
 		private static string ComandFindClassroom(int number, out int count, out long time)
 		{
-			ItemsList? items = FileStorage.DownloadDataTXT(_filePath, _skipLine);
+			ItemsList? items = FileStorage.DownloadDataListTXT(_fileStudentPath, _fileTeacherPath, _skipLine);
 			count = 0;
 			time = 0;
 
@@ -472,7 +509,7 @@ namespace l1
 
 		private static string ComandFindBus(int number, out int count, out long time)
 		{
-			ItemsList? items = FileStorage.DownloadDataTXT(_filePath, _skipLine);
+			ItemsList? items = FileStorage.DownloadDataListTXT(_fileStudentPath, _fileTeacherPath, _skipLine);
 			count = 0;
 			time = 0;
 
