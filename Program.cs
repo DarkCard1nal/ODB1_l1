@@ -288,7 +288,7 @@ namespace l1
 
 		private static string ComandAuthor()
 		{
-			return "Schoolsearch l1 by Shkilnyi V. CS31";
+			return "Schoolsearch l2 by Shkilnyi V. CS31";
 		}
 
 		private static void ComandHelp()
